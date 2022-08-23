@@ -10,7 +10,9 @@
     "build:changelog": "npx @discordx/changelog --root=src",
     "dev": "ts-node-esm src/main.ts",
     "start": "node build/main.js",
-    "watch": "nodemon --exec ts-node-esm src/main.ts"
+    "watch": "nodemon --exec ts-node-esm src/main.ts",
+    "lint": "eslint ./src/**/*",
+    "lint-fix": "eslint ./src --fix"
   },
   "dependencies": {
     "@discordx/importer": "^1.1.10",
@@ -22,6 +24,11 @@
   },
   "devDependencies": {
     "@types/node": "^18.7.8",
+    "@typescript-eslint/eslint-plugin": "^5.34.0",
+    "@typescript-eslint/parser": "^5.34.0",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
