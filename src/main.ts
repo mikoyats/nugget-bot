@@ -1,9 +1,12 @@
 import "reflect-metadata";
+import dotenv from 'dotenv';
 
 import { dirname, importx } from "@discordx/importer";
 import type { Interaction, Message } from "discord.js";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
+
+dotenv.config();
 
 export const bot = new Client({
   // To only use global commands (use @Guild for specific guild command), comment this line
@@ -20,11 +23,6 @@ export const bot = new Client({
 
   // Debug logs are disabled in silent mode
   silent: false,
-
-  // Configuration for @SimpleCommand
-  simpleCommand: {
-    prefix: "!",
-  },
 });
 
 bot.once("ready", async () => {
