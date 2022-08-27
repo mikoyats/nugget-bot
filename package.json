@@ -8,9 +8,9 @@
   "scripts": {
     "build": "tsc",
     "build:changelog": "npx @discordx/changelog --root=src",
-    "dev": "ts-node-esm src/main.ts",
-    "start": "node build/main.js",
-    "watch": "nodemon --exec ts-node-esm src/main.ts",
+    "dev": "ts-node-esm --experimental-specifier-resolution=node src/main.ts",
+    "start": "node --experimental-specifier-resolution=node build/main.js",
+    "watch": "nodemon --experimental-specifier-resolution=node --exec ts-node-esm src/main.ts",
     "lint": "eslint ./src/**/*",
     "lint-fix": "eslint ./src --fix"
   },
@@ -20,9 +20,11 @@
     "discord.js": "^14.2.0",
     "discordx": "^11.1.8",
     "dotenv": "^16.0.1",
+    "google-spreadsheet": "^3.3.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@types/google-spreadsheet": "^3.3.0",
     "@types/node": "^18.7.8",
     "@typescript-eslint/eslint-plugin": "^5.34.0",
     "@typescript-eslint/parser": "^5.34.0",
