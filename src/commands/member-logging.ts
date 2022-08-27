@@ -12,6 +12,7 @@ import {
 } from 'discord.js';
 import { ActionRowBuilder } from 'discord.js';
 import { ButtonComponent, Discord, ModalComponent, Slash } from 'discordx';
+import { addGuest, addMember } from '../services/userService';
 
 @Discord()
 export class MemberLogging {
@@ -45,7 +46,7 @@ export class MemberLogging {
 
         const input5 = new TextInputBuilder()
             .setCustomId('introduction')
-            .setLabel('Can you give a short introduction of yourself?')
+            .setLabel('Can you give an introduction of yourself?')
             .setStyle(TextInputStyle.Paragraph)
             .setRequired();
 
@@ -77,10 +78,19 @@ export class MemberLogging {
 
     @ModalComponent({ id: 'memberRegistration' })
     async handleSubmitMember(interaction: ModalSubmitInteraction) {
-        console.log(interaction.fields);
-        await interaction.message?.edit({
+        const { user, fields, message } = interaction;
+
+        await message?.edit({
             content: "You're now registered!",
             components: [],
+        });
+
+        await addMember(user.id, {
+            name: fields.getTextInputValue('name'),
+            source: fields.getTextInputValue('source'),
+            timezone: fields.getTextInputValue('timezone'),
+            interests: fields.getTextInputValue('interests'),
+            introduction: fields.getTextInputValue('introduction'),
         });
 
         await interaction.reply({
@@ -112,10 +122,15 @@ export class MemberLogging {
 
     @ModalComponent({ id: 'guestRegistration' })
     async handleSubmitGuest(interaction: ModalSubmitInteraction) {
-        console.log(interaction.fields);
-        await interaction.message?.edit({
+        const { user, fields, message } = interaction;
+
+        await message?.edit({
             content: "You're now registered!",
             components: [],
+        });
+
+        await addGuest(user.id, {
+            referrer: fields.getTextInputValue('referrer'),
         });
 
         await interaction.reply({
