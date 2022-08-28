@@ -139,6 +139,8 @@ export class MemberLogging {
             referrer: fields.getTextInputValue('referrer'),
         });
 
+        await addRole(user.id, GeneralRoles.GUEST);
+
         await interaction.reply({
             content: 'Thanks for answering!',
         });
