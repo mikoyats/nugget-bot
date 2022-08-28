@@ -4,15 +4,17 @@ import {
     ButtonBuilder,
     TextInputStyle,
     TextInputBuilder,
+    ActionRowBuilder,
     ButtonInteraction,
     CommandInteraction,
     ModalSubmitInteraction,
     ModalActionRowComponentBuilder,
     MessageActionRowComponentBuilder,
 } from 'discord.js';
-import { ActionRowBuilder } from 'discord.js';
 import { ButtonComponent, Discord, ModalComponent, Slash } from 'discordx';
+import { addRole } from '../services/roleService';
 import { addGuest, addMember } from '../services/userService';
+import { GeneralRoles } from '../types/Role';
 
 @Discord()
 export class MemberLogging {
@@ -80,6 +82,8 @@ export class MemberLogging {
     async handleSubmitMember(interaction: ModalSubmitInteraction) {
         const { user, fields, message } = interaction;
 
+        if (!interaction.user) throw Error('Member not found');
+
         await message?.edit({
             content: "You're now registered!",
             components: [],
@@ -92,6 +96,8 @@ export class MemberLogging {
             interests: fields.getTextInputValue('interests'),
             introduction: fields.getTextInputValue('introduction'),
         });
+
+        await addRole(user.id, GeneralRoles.NUGGETS);
 
         await interaction.reply({
             content: 'Thanks for answering!',
