@@ -12,6 +12,7 @@ import {
     MessageActionRowComponentBuilder,
 } from 'discord.js';
 import { ButtonComponent, Discord, ModalComponent, Slash } from 'discordx';
+import { changeNickname } from '../services/memberService';
 import { addRole } from '../services/roleService';
 import { addGuest, addMember } from '../services/userService';
 import { GeneralRoles } from '../types/Role';
@@ -98,6 +99,8 @@ export class MemberLogging {
         });
 
         await addRole(user.id, GeneralRoles.NUGGETS);
+
+        await changeNickname(user.id, fields.getTextInputValue('name'));
 
         await interaction.reply({
             content: 'Thanks for answering!',
