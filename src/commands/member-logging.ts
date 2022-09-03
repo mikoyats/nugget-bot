@@ -1,4 +1,5 @@
 import {
+    ChannelType,
     ButtonStyle,
     ModalBuilder,
     ButtonBuilder,
@@ -12,9 +13,17 @@ import {
     MessageActionRowComponentBuilder,
 } from 'discord.js';
 import { ButtonComponent, Discord, ModalComponent, Slash } from 'discordx';
-import { changeNickname } from '../services/memberService';
+
+// Services
 import { addRole } from '../services/roleService';
+import { findChannel } from '../services/channelService';
+import { changeNickname } from '../services/memberService';
 import { addGuest, addMember } from '../services/userService';
+
+// Utils
+import { buildEmbedTemplate } from '../embeds';
+
+// Types
 import { GeneralRoles } from '../types/Role';
 
 @Discord()
@@ -83,6 +92,12 @@ export class MemberLogging {
     async handleSubmitMember(interaction: ModalSubmitInteraction) {
         const { user, fields, message } = interaction;
 
+        const name = fields.getTextInputValue('name');
+        const source = fields.getTextInputValue('source');
+        const timezone = fields.getTextInputValue('timezone');
+        const interests = fields.getTextInputValue('interests');
+        const introduction = fields.getTextInputValue('introduction');
+
         if (!interaction.user) throw Error('Member not found');
 
         await message?.edit({
@@ -91,19 +106,42 @@ export class MemberLogging {
         });
 
         await addMember(user.id, {
-            name: fields.getTextInputValue('name'),
-            source: fields.getTextInputValue('source'),
-            timezone: fields.getTextInputValue('timezone'),
-            interests: fields.getTextInputValue('interests'),
-            introduction: fields.getTextInputValue('introduction'),
+            name,
+            source,
+            timezone,
+            interests,
+            introduction,
         });
 
         await addRole(user.id, GeneralRoles.NUGGETS);
 
         await changeNickname(user.id, fields.getTextInputValue('name'));
 
+        const embed = await buildEmbedTemplate('introduction', {
+            user,
+            name,
+            source,
+            timezone,
+            interests,
+            introduction,
+        });
+
+        const channel = await findChannel(
+            'introduction',
+            ChannelType.GuildText
+        );
+
         await interaction.reply({
             content: 'Thanks for answering!',
+        });
+
+        const channelMessage = await channel.send({
+            content: `Meet the new addition to the nugget box! ${user}`,
+            embeds: [embed],
+        });
+
+        await channelMessage.startThread({
+            name: `Get to know ${name}!`,
         });
     }
 
