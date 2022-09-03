@@ -2,7 +2,7 @@ import { GuildMember } from 'discord.js';
 import { guild } from './guildService';
 
 const getMember = (userId: string): GuildMember => {
-    const member = guild.members.cache.find((user) => user.id === userId);
+    const member = guild.members.cache.get(userId);
 
     if (!member) throw Error('Member not found');
 
