@@ -1,11 +1,14 @@
 import * as memberRegistration from './memberRegistration';
+import * as guestRegistration from './guestRegistration';
 
 const modalComponents = {
     [memberRegistration.customId]: memberRegistration.create,
+    [guestRegistration.customId]: guestRegistration.create,
 };
 
 const modalComponentInputs = {
     [memberRegistration.customId]: memberRegistration.fieldCustomIds,
+    [guestRegistration.customId]: guestRegistration.fieldCustomIds,
 };
 
 type ModalComponentNames = keyof typeof modalComponents;
@@ -23,4 +26,5 @@ export {
     ModalComponentFields,
     // Components
     memberRegistration,
+    guestRegistration,
 };

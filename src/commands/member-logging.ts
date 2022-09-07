@@ -1,15 +1,11 @@
 import {
     ChannelType,
     ButtonStyle,
-    ModalBuilder,
     ButtonBuilder,
-    TextInputStyle,
-    TextInputBuilder,
     ActionRowBuilder,
     ButtonInteraction,
     CommandInteraction,
     ModalSubmitInteraction,
-    ModalActionRowComponentBuilder,
     MessageActionRowComponentBuilder,
 } from 'discord.js';
 import { ButtonComponent, Discord, ModalComponent, Slash } from 'discordx';
@@ -26,12 +22,13 @@ import {
     createComponentFromTemplate,
     extractModalFieldValues,
 } from '../components';
-import { memberRegistration } from '../components/modals';
+import { memberRegistration, guestRegistration } from '../components/modals';
 
 // Types
 import { GeneralRoles } from '../types/Role';
 
 const { customId: memberRegistrationModalID } = memberRegistration;
+const { customId: guestRegistrationModalID } = guestRegistration;
 
 @Discord()
 export class MemberLogging {
@@ -103,29 +100,24 @@ export class MemberLogging {
 
     @ButtonComponent({ id: 'guest' })
     async handleGuest(interaction: ButtonInteraction): Promise<unknown> {
-        const input1 = new TextInputBuilder()
-            .setCustomId('referrer')
-            .setLabel('Who invited you to the discord server?')
-            .setStyle(TextInputStyle.Short)
-            .setRequired();
-
-        const modal = new ModalBuilder()
-            .setCustomId('guestRegistration')
-            .setTitle('Guest Registration')
-            .addComponents(
-                new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-                    input1
-                )
-            );
+        const modal = createComponentFromTemplate(
+            'modal',
+            guestRegistrationModalID
+        );
 
         await interaction.showModal(modal);
 
         return;
     }
 
-    @ModalComponent({ id: 'guestRegistration' })
+    @ModalComponent({ id: guestRegistrationModalID })
     async handleSubmitGuest(interaction: ModalSubmitInteraction) {
         const { user, fields, message } = interaction;
+
+        const { referrer } = extractModalFieldValues(
+            guestRegistrationModalID,
+            fields
+        );
 
         await message?.edit({
             content: "You're now registered!",
@@ -133,7 +125,7 @@ export class MemberLogging {
         });
 
         await addGuest(user.id, {
-            referrer: fields.getTextInputValue('referrer'),
+            referrer,
         });
 
         await addRole(user.id, GeneralRoles.GUEST);
