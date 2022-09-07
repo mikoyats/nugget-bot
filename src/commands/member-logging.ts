@@ -22,81 +22,37 @@ import { addGuest, addMember } from '../services/userService';
 
 // Utils
 import { buildEmbedTemplate } from '../embeds';
+import {
+    createComponentFromTemplate,
+    extractModalFieldValues,
+} from '../components';
+import { memberRegistration } from '../components/modals';
 
 // Types
 import { GeneralRoles } from '../types/Role';
+
+const { customId: memberRegistrationModalID } = memberRegistration;
 
 @Discord()
 export class MemberLogging {
     @ButtonComponent({ id: 'member' })
     async handleMember(interaction: ButtonInteraction): Promise<unknown> {
-        const input1 = new TextInputBuilder()
-            .setCustomId('name')
-            .setLabel('What is your name in FFXIV?')
-            .setPlaceholder('First Last')
-            .setStyle(TextInputStyle.Short)
-            .setRequired();
-
-        const input2 = new TextInputBuilder()
-            .setCustomId('source')
-            .setLabel('How did you know about the FC?')
-            .setStyle(TextInputStyle.Paragraph)
-            .setRequired();
-
-        const input3 = new TextInputBuilder()
-            .setCustomId('timezone')
-            .setLabel('What is your timezone?')
-            .setPlaceholder('For example, "GMT+8"')
-            .setStyle(TextInputStyle.Short)
-            .setRequired();
-
-        const input4 = new TextInputBuilder()
-            .setCustomId('interests')
-            .setLabel('Any interests within the game?')
-            .setStyle(TextInputStyle.Paragraph)
-            .setRequired();
-
-        const input5 = new TextInputBuilder()
-            .setCustomId('introduction')
-            .setLabel('Can you give an introduction of yourself?')
-            .setStyle(TextInputStyle.Paragraph)
-            .setRequired();
-
-        const modal = new ModalBuilder()
-            .setCustomId('memberRegistration')
-            .setTitle('Member Registration')
-            .addComponents(
-                new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-                    input1
-                ),
-                new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-                    input2
-                ),
-                new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-                    input3
-                ),
-                new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-                    input4
-                ),
-                new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-                    input5
-                )
-            );
+        const modal = createComponentFromTemplate(
+            'modal',
+            memberRegistrationModalID
+        );
 
         await interaction.showModal(modal);
 
         return;
     }
 
-    @ModalComponent({ id: 'memberRegistration' })
+    @ModalComponent({ id: memberRegistrationModalID })
     async handleSubmitMember(interaction: ModalSubmitInteraction) {
         const { user, fields, message } = interaction;
 
-        const name = fields.getTextInputValue('name');
-        const source = fields.getTextInputValue('source');
-        const timezone = fields.getTextInputValue('timezone');
-        const interests = fields.getTextInputValue('interests');
-        const introduction = fields.getTextInputValue('introduction');
+        const { name, source, timezone, interests, introduction } =
+            extractModalFieldValues(memberRegistrationModalID, fields);
 
         if (!interaction.user) throw Error('Member not found');
 
