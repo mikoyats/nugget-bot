@@ -85,7 +85,8 @@ export class MemberLogging {
         );
 
         await interaction.reply({
-            content: 'Thanks for answering!',
+            content:
+                "Thanks for answering! Don't be shy and hang out with your new FC :kiss:",
         });
 
         const channelMessage = await channel.send({
@@ -159,7 +160,8 @@ export class MemberLogging {
 
         await interaction.user.send({
             isInteraction: true,
-            content: 'Are you a Member or a Guest?',
+            content:
+                'Hey sexy! :wink: \nI just wanna ask, are you a Member or a Guest?',
             components: [buttonRow],
         });
 
