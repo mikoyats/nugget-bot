@@ -19,7 +19,7 @@ import { addGuest, addMember } from '../services/userService';
 // Utils
 import { buildEmbedTemplate } from '../embeds';
 import {
-    createComponentFromTemplate,
+    createModalFromTemplate,
     extractModalFieldValues,
 } from '../components';
 import { memberRegistration, guestRegistration } from '../components/modals';
@@ -34,10 +34,7 @@ const { customId: guestRegistrationModalID } = guestRegistration;
 export class MemberLogging {
     @ButtonComponent({ id: 'member' })
     async handleMember(interaction: ButtonInteraction): Promise<unknown> {
-        const modal = createComponentFromTemplate(
-            'modal',
-            memberRegistrationModalID
-        );
+        const modal = createModalFromTemplate(memberRegistrationModalID);
 
         await interaction.showModal(modal);
 
@@ -101,10 +98,7 @@ export class MemberLogging {
 
     @ButtonComponent({ id: 'guest' })
     async handleGuest(interaction: ButtonInteraction): Promise<unknown> {
-        const modal = createComponentFromTemplate(
-            'modal',
-            guestRegistrationModalID
-        );
+        const modal = createModalFromTemplate(guestRegistrationModalID);
 
         await interaction.showModal(modal);
 

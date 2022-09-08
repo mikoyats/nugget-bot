@@ -7,16 +7,11 @@ import {
     ModalComponentFields,
 } from './modals';
 
-const components = {
-    modal: modalComponents,
-};
-
-const createComponentFromTemplate = <T extends ModalComponentNames>(
-    type: keyof typeof components,
-    name: ModalComponentNames,
+const createModalFromTemplate = <T extends ModalComponentNames>(
+    name: T,
     params?: ModalComponentParameters<T>
 ) => {
-    const componentBuilder = components[type][name];
+    const componentBuilder = modalComponents[name];
 
     const component = componentBuilder.call(params);
 
@@ -42,4 +37,4 @@ const extractModalFieldValues = <T extends ModalComponentNames>(
     return modalFieldValues;
 };
 
-export { createComponentFromTemplate, extractModalFieldValues };
+export { createModalFromTemplate, extractModalFieldValues };
