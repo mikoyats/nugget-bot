@@ -43,6 +43,7 @@ export class MemberLogging {
 
     @ModalComponent({ id: memberRegistrationModalID })
     async handleSubmitMember(interaction: ModalSubmitInteraction) {
+        await interaction.deferReply();
         const { user, fields, message } = interaction;
 
         const { name, source, timezone, interests, introduction } =
@@ -50,7 +51,9 @@ export class MemberLogging {
 
         if (!interaction.user) throw Error('Member not found');
 
-        await message?.edit({
+        const originalInteraction = await message?.fetch();
+
+        originalInteraction?.edit({
             content: "You're now registered!",
             components: [],
         });
@@ -81,7 +84,7 @@ export class MemberLogging {
             ChannelType.GuildText
         );
 
-        await interaction.reply({
+        await interaction.editReply({
             content:
                 "Thanks for answering! Don't be shy and hang out with your new FC :kiss:",
         });
@@ -107,6 +110,7 @@ export class MemberLogging {
 
     @ModalComponent({ id: guestRegistrationModalID })
     async handleSubmitGuest(interaction: ModalSubmitInteraction) {
+        await interaction.deferReply();
         const { user, fields, message } = interaction;
 
         const { referrer } = extractModalFieldValues(
@@ -114,7 +118,9 @@ export class MemberLogging {
             fields
         );
 
-        await message?.edit({
+        const originalInteraction = await message?.fetch();
+
+        originalInteraction?.edit({
             content: "You're now registered!",
             components: [],
         });
@@ -125,14 +131,14 @@ export class MemberLogging {
 
         await addRole(user.id, GeneralRoles.GUEST);
 
-        await interaction.reply({
+        await interaction.editReply({
             content: 'Thanks for answering!',
         });
     }
 
     @Slash({ description: 'tests member interview', name: 'interview' })
     async myRoles(interaction: CommandInteraction): Promise<unknown> {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
 
         const memberTypeBtns = createActionRowFromTemplates([
             'memberBtn',
@@ -147,7 +153,7 @@ export class MemberLogging {
         });
 
         // send it
-        interaction.editReply({
+        await interaction.editReply({
             content: 'Sent',
         });
         return;
