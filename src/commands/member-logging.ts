@@ -1,12 +1,8 @@
 import {
     ChannelType,
-    ButtonStyle,
-    ButtonBuilder,
-    ActionRowBuilder,
     ButtonInteraction,
     CommandInteraction,
     ModalSubmitInteraction,
-    MessageActionRowComponentBuilder,
 } from 'discord.js';
 import { ButtonComponent, Discord, ModalComponent, Slash } from 'discordx';
 
@@ -19,20 +15,24 @@ import { addGuest, addMember } from '../services/userService';
 // Utils
 import { buildEmbedTemplate } from '../embeds';
 import {
+    createActionRowFromTemplates,
     createModalFromTemplate,
     extractModalFieldValues,
 } from '../components';
 import { memberRegistration, guestRegistration } from '../components/modals';
+import { guestBtn, memberBtn } from '../components/actions';
 
 // Types
 import { GeneralRoles } from '../types/Role';
 
 const { customId: memberRegistrationModalID } = memberRegistration;
 const { customId: guestRegistrationModalID } = guestRegistration;
+const { customId: memberBtnID } = memberBtn;
+const { customId: guestBtnID } = guestBtn;
 
 @Discord()
 export class MemberLogging {
-    @ButtonComponent({ id: 'member' })
+    @ButtonComponent({ id: memberBtnID })
     async handleMember(interaction: ButtonInteraction): Promise<unknown> {
         const modal = createModalFromTemplate(memberRegistrationModalID);
 
@@ -96,7 +96,7 @@ export class MemberLogging {
         });
     }
 
-    @ButtonComponent({ id: 'guest' })
+    @ButtonComponent({ id: guestBtnID })
     async handleGuest(interaction: ButtonInteraction): Promise<unknown> {
         const modal = createModalFromTemplate(guestRegistrationModalID);
 
@@ -134,29 +134,16 @@ export class MemberLogging {
     async myRoles(interaction: CommandInteraction): Promise<unknown> {
         await interaction.deferReply();
 
-        // create menu for roles
-        const memberBtn = new ButtonBuilder()
-            .setCustomId('member')
-            .setLabel('Member')
-            .setStyle(ButtonStyle.Primary);
-
-        const guestBtn = new ButtonBuilder()
-            .setCustomId('guest')
-            .setLabel('Guest')
-            .setStyle(ButtonStyle.Secondary);
-
-        // create a row for message actions
-        const buttonRow =
-            new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-                memberBtn,
-                guestBtn
-            );
+        const memberTypeBtns = createActionRowFromTemplates([
+            'memberBtn',
+            'guestBtn',
+        ]);
 
         await interaction.user.send({
             isInteraction: true,
             content:
                 'Hey sexy! :wink: \nI just wanna ask, are you a Member or a Guest?',
-            components: [buttonRow],
+            components: [memberTypeBtns],
         });
 
         // send it
