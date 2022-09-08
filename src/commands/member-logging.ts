@@ -131,6 +131,12 @@ export class MemberLogging {
 
         await addRole(user.id, GeneralRoles.GUEST);
 
+        const channel = await findChannel('guest-chat', ChannelType.GuildText);
+
+        await channel.send({
+            content: `Whalecum to the Nugs Discord Server, ${user}!\nInvited by: ${referrer}`,
+        });
+
         await interaction.editReply({
             content: 'Thanks for answering!',
         });
