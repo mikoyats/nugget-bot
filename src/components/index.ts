@@ -1,4 +1,9 @@
-import { ModalSubmitFields } from 'discord.js';
+import {
+    ActionRowBuilder,
+    ModalSubmitFields,
+    MessageActionRowComponentBuilder,
+} from 'discord.js';
+import { actionComponents, ActionComponentNames } from './actions';
 import {
     modalComponents,
     modalComponentInputs,
@@ -37,4 +42,29 @@ const extractModalFieldValues = <T extends ModalComponentNames>(
     return modalFieldValues;
 };
 
-export { createModalFromTemplate, extractModalFieldValues };
+const createActionRowFromTemplates = (
+    components: [
+        ActionComponentNames | MessageActionRowComponentBuilder,
+        ...(ActionComponentNames | MessageActionRowComponentBuilder)[]
+    ]
+) => {
+    const componentBuilders = components.map((component) => {
+        if (typeof component === 'string') {
+            return actionComponents[component].builder;
+        } else {
+            return component;
+        }
+    });
+
+    const actionRow = new ActionRowBuilder<MessageActionRowComponentBuilder>({
+        components: componentBuilders,
+    });
+
+    return actionRow;
+};
+
+export {
+    createModalFromTemplate,
+    extractModalFieldValues,
+    createActionRowFromTemplates,
+};
