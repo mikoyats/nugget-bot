@@ -8,7 +8,7 @@ module.exports = {
             repo: 'git@github.com:mikoyats/nugget-bot.git',
             path: '/home/github/nugget-bot',
             'post-deploy':
-                'yarn install && yarn build && pm2 reload ../ecosystem.config.js nugget-bot --env production',
+                'yarn install && yarn build && pm2 reload ecosystem.config.js nugget-bot --env production',
         },
     },
 };
