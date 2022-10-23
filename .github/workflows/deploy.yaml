@@ -28,7 +28,6 @@ jobs:
 
       - name: Deploy
         run: |
-          pm2 deploy ecosystem.config.cjs production setup
           pm2 deploy ecosystem.config.cjs production
         env:
           SSH_USERNAME: ${{secrets.SSH_USERNAME}}
