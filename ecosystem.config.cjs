@@ -3,7 +3,7 @@ module.exports = {
         production: {
             user: process.env.SSH_USERNAME,
             host: process.env.SSH_HOST,
-            key: process.env.SSH_PRIVATE_KEY,
+            key: 'deploy.key',
             ref: 'origin/main',
             repo: 'git@github.com:mikoyats/nugget-bot.git',
             path: '/home/github/nugget-bot',
