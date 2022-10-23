@@ -62,6 +62,12 @@ async function run() {
     // The following syntax should be used in the ECMAScript environment
     await importx(dirname(import.meta.url) + '/{events,commands}/**/*.{ts,js}');
 
+    if (process.env.NODE_ENV === 'development') {
+        await importx(
+            dirname(import.meta.url) + '/dev/{events,commands}/**/*.{ts,js}'
+        );
+    }
+
     // Let's start the bot
     if (!process.env.BOT_TOKEN) {
         throw Error('Could not find BOT_TOKEN in your environment');
