@@ -143,7 +143,6 @@ export class MemberLogging {
 
     @On({ event: 'guildMemberAdd' })
     async onMemberJoin([member]: ArgsOf<'guildMemberAdd'>) {
-        console.log('MEMBER JOINED');
         const memberTypeBtns = createActionRowFromTemplates([
             'memberBtn',
             'guestBtn',
@@ -152,7 +151,7 @@ export class MemberLogging {
         await member.send({
             isInteraction: true,
             content:
-                'Hey sexy! :wink: \nI just wanna ask, are you a Member or a Guest?',
+                "Hey sexy! :wink: Welcome to the FFXIV FC: Nugget Nation.\nI'm Mrs. Nuggy, the FC.. uhh.. Mommy Nugget :kiss:\nI just wanna ask, are you a Member or a Guest?",
             components: [memberTypeBtns],
         });
     }
