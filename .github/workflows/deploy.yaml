@@ -27,7 +27,9 @@ jobs:
         run: npm i pm2 -g
 
       - name: Deploy
-        run: pm2 deploy ecosystem.config.cjs production
+        run: |
+          pm2 deploy ecosystem.config.cjs production setup
+          pm2 deploy ecosystem.config.cjs production
         env:
           SSH_USERNAME: ${{secrets.SSH_USERNAME}}
           SSH_HOST: ${{secrets.SSH_HOST}}
