@@ -1,4 +1,8 @@
-import { GuildBasedChannel, MessageOptions, MessagePayload } from 'discord.js';
+import {
+    GuildBasedChannel,
+    BaseMessageOptions,
+    MessagePayload,
+} from 'discord.js';
 import { GuildBasedChannels } from '../types/Channel';
 import { guild } from './guildService';
 
@@ -29,7 +33,7 @@ const findChannel = <T extends GuildBasedChannel['type']>(
 
 const sendChannelMessage = async (
     name: string,
-    message: string | MessagePayload | MessageOptions
+    message: string | MessagePayload | BaseMessageOptions
 ) => {
     const channel = findChannel(name);
 
